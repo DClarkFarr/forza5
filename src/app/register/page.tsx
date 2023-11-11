@@ -1,3 +1,4 @@
+import RegisterForm from "@/components/User/RestierForm";
 import { Metadata } from "next";
 
 export function metadata(): Metadata {
@@ -11,6 +12,7 @@ export default function RegisterPage() {
     return (
         <div className="register-page">
             <h1>Create account here!</h1>
+            <RegisterForm />
         </div>
     );
 }

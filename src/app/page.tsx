@@ -15,7 +15,7 @@ export default function Home() {
                 <h2>Welcome to Forza 5 Calculator!</h2>
             </div>
             <div>
-                <Link href="/register" className="btn">
+                <Link href="/register" className="btn bg-sky-700">
                     Register
                 </Link>
             </div>
