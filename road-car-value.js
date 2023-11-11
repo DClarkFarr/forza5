@@ -1,6 +1,6 @@
 var weights = {
-    speed: 1.5,
-    handling: 1,
+    speed: 1,
+    handling: 1.5,
     acceleration: 1.5,
     launch: 1,
     breaking: 0.5,
