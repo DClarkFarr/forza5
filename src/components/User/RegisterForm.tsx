@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import FormError from "../Form/FormError";
 import UserOauthService from "@/app/services/UserOauthService";
 import { AxiosError } from "axios";
+import useUser from "@/methods/session/useUser";
 
 export type RegisterFormState = {
     name: string;
@@ -18,6 +19,11 @@ export type RegisterFormProps = {
     onSuccess?: (user: User) => void;
 };
 export default function RegisterForm(props: RegisterFormProps) {
+    const { user, mutateUser } = useUser({
+        redirectTo: "/account",
+        redirectIfFound: true,
+    });
+
     const [state] = useState<RegisterFormState>({
         name: "",
         email: "",

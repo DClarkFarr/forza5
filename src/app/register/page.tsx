@@ -1,4 +1,6 @@
-import RegisterForm from "@/components/User/RestierForm";
+import RegisterForm from "@/components/User/RegisterForm";
+import useUser from "@/methods/session/useUser";
+import { User } from "@/types/User";
 import { Metadata } from "next";
 
 export function metadata(): Metadata {
