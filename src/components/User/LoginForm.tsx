@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import FormError from "../Form/FormError";
 import UserOauthService from "@/services/UserOauthService";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 export type LoginFormState = {
     email: string;
@@ -35,6 +36,8 @@ export default function LoginForm(props: LoginFormProps) {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const { push } = useRouter();
+
     const onFormSubmit = () => {
         return handleSubmit(async (data) => {
             setIsSubmitting(true);
@@ -48,6 +51,8 @@ export default function LoginForm(props: LoginFormProps) {
                 const user = await submitMethod(data);
                 if (typeof props.onSuccess === "function") {
                     props.onSuccess(user);
+                } else if (props.redirect) {
+                    push(props.redirect);
                 } else {
                     console.warn(
                         "User logged in, but no callback for success given"
@@ -107,7 +112,7 @@ export default function LoginForm(props: LoginFormProps) {
                 type="submit"
                 disabled={isSubmitting || !isValid}
             >
-                {isSubmitting ? "Creating account..." : "Create account"}
+                {isSubmitting ? "Logging in..." : "Log in"}
             </button>
         </form>
     );

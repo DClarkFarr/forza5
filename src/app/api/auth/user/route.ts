@@ -1,15 +1,15 @@
 import { loginUser, registerUser } from "@/prisma/methods/user";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ironSessionMiddleware } from "@/methods/session";
+import { getSessionUser, initializeSession } from "@/actions/sessionActions";
 
-export const POST = ironSessionMiddleware(async (req, res) => {
+export async function POST(req: NextRequest) {
     try {
         const { name, email, password } = await req.json();
 
         const user = await registerUser(name, email, password);
 
-        req.session.user = user;
-        await req.session.save();
+        await initializeSession(user);
 
         return NextResponse.json(user);
     } catch (err) {
@@ -22,16 +22,15 @@ export const POST = ironSessionMiddleware(async (req, res) => {
             );
         }
     }
-});
+}
 
-export const PUT = ironSessionMiddleware(async (req, res) => {
+export async function PUT(req: NextRequest) {
     try {
         const { email, password } = await req.json();
 
         const user = await loginUser(email, password);
 
-        req.session.user = user;
-        await req.session.save();
+        await initializeSession(user);
 
         return NextResponse.json(user);
     } catch (err) {
@@ -44,17 +43,20 @@ export const PUT = ironSessionMiddleware(async (req, res) => {
             );
         }
     }
-});
+}
 
-export const GET = ironSessionMiddleware(async (req, res) => {
+export async function GET(req: NextRequest) {
     try {
-        if (!req.session.user) {
+        const user = getSessionUser();
+
+        if (!user) {
             return NextResponse.json(
                 { message: "No session" },
                 { status: 401 }
             );
         }
-        return NextResponse.json(req.session.user);
+
+        return NextResponse.json(user);
     } catch (err) {
         if (err instanceof Error) {
             return NextResponse.json({ message: err.message }, { status: 402 });
@@ -65,4 +67,4 @@ export const GET = ironSessionMiddleware(async (req, res) => {
             );
         }
     }
-});
+}

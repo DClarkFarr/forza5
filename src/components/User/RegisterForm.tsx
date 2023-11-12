@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import FormError from "../Form/FormError";
 import UserOauthService from "@/services/UserOauthService";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 export type RegisterFormState = {
     name: string;
@@ -19,6 +20,8 @@ export type RegisterFormProps = {
     onSuccess?: (user: User) => void;
 };
 export default function RegisterForm(props: RegisterFormProps) {
+    const { push } = useRouter();
+
     const [state] = useState<RegisterFormState>({
         name: "",
         email: "",
@@ -50,6 +53,8 @@ export default function RegisterForm(props: RegisterFormProps) {
                 const user = await submitMethod(data);
                 if (typeof props.onSuccess === "function") {
                     props.onSuccess(user);
+                } else if (props.redirect) {
+                    push(props.redirect);
                 } else {
                     console.warn(
                         "User register complete, but no callback for success given"
