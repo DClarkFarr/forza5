@@ -1,4 +1,4 @@
-import { registerUser } from "@/prisma/methods/user";
+import { loginUser, registerUser } from "@/prisma/methods/user";
 import { NextResponse } from "next/server";
 import { ironSessionMiddleware } from "@/methods/session";
 
@@ -7,6 +7,28 @@ export const POST = ironSessionMiddleware(async (req, res) => {
         const { name, email, password } = await req.json();
 
         const user = await registerUser(name, email, password);
+
+        req.session.user = user;
+        await req.session.save();
+
+        return NextResponse.json(user);
+    } catch (err) {
+        if (err instanceof Error) {
+            return NextResponse.json({ message: err.message }, { status: 402 });
+        } else {
+            return NextResponse.json(
+                { message: "Unknown error" },
+                { status: 500 }
+            );
+        }
+    }
+});
+
+export const PUT = ironSessionMiddleware(async (req, res) => {
+    try {
+        const { email, password } = await req.json();
+
+        const user = await loginUser(email, password);
 
         req.session.user = user;
         await req.session.save();

@@ -7,20 +7,18 @@ import FormError from "../Form/FormError";
 import UserOauthService from "@/services/UserOauthService";
 import { AxiosError } from "axios";
 
-export type RegisterFormState = {
-    name: string;
+export type LoginFormState = {
     email: string;
     password: string;
 };
-export type RegisterFormProps = {
-    initialState?: Partial<RegisterFormState>;
+export type LoginFormProps = {
+    initialState?: Partial<LoginFormState>;
     redirect?: string;
-    onSubmit?: (data: RegisterFormState) => Promise<User>;
+    onSubmit?: (data: LoginFormState) => Promise<User>;
     onSuccess?: (user: User) => void;
 };
-export default function RegisterForm(props: RegisterFormProps) {
-    const [state] = useState<RegisterFormState>({
-        name: "",
+export default function LoginForm(props: LoginFormProps) {
+    const [state] = useState<LoginFormState>({
         email: "",
         password: "",
         ...props.initialState,
@@ -44,7 +42,7 @@ export default function RegisterForm(props: RegisterFormProps) {
             const submitMethod =
                 typeof props.onSubmit === "function"
                     ? props.onSubmit
-                    : UserOauthService.register;
+                    : UserOauthService.login;
 
             try {
                 const user = await submitMethod(data);
@@ -52,13 +50,13 @@ export default function RegisterForm(props: RegisterFormProps) {
                     props.onSuccess(user);
                 } else {
                     console.warn(
-                        "User register complete, but no callback for success given"
+                        "User logged in, but no callback for success given"
                     );
                 }
             } catch (err) {
                 if (err instanceof AxiosError) {
                     console.error(
-                        "Error registering user",
+                        "Error logging in user",
                         err,
                         err.response?.data
                     );
@@ -73,20 +71,6 @@ export default function RegisterForm(props: RegisterFormProps) {
 
     return (
         <form onSubmit={onFormSubmit()} className="max-w-[400px]">
-            <div className="form-group">
-                <label className="block">Name</label>
-                <input
-                    {...register("name", {
-                        required: "Name must be at least 2 chars",
-                        minLength: 2,
-                    })}
-                    placeholder="Full name"
-                    className="form-control"
-                />
-                {errors.name?.message && (
-                    <FormError message={errors.name.message} />
-                )}
-            </div>
             <div className="form-group">
                 <label className="block">Email</label>
                 <input
