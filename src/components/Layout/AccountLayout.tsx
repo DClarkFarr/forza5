@@ -11,7 +11,7 @@ export default function AccountLayout({
 }) {
     return (
         <div
-            className={`layout layout--account w-full min-h-screen ${styles.account}`}
+            className={`layout w-full min-h-screen ${styles["layout--account"]}`}
         >
             <AccountHeader user={user} />
             <div className="layout__content p-8 bg-white rounded-lg max-w-screen-xl mx-auto">
