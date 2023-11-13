@@ -3,4 +3,19 @@ export interface User {
     email: string;
     name: string;
     password: string;
+    role: "user" | "admin";
 }
+
+export type UserCar = {
+    id: number;
+    userId: number;
+    carId: number;
+    rating: number;
+    type: "racing" | "offroad";
+    speed: number;
+    handling: number;
+    acceleration: number;
+    launch: number;
+    breaking: number;
+    offroad: number;
+};

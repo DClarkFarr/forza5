@@ -2,17 +2,56 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String
-  password String
+    id       Int       @id @default(autoincrement())
+    email    String    @unique
+    role     ROLES     @default(user)
+    name     String
+    password String
+    cars     UserCar[]
+}
+
+model Car {
+    id    Int    @id @default(autoincrement())
+    make  String
+    model String
+
+    userCars UserCar[]
+
+    @@unique([make, model])
+}
+
+model UserCar {
+    id           Int           @id @default(autoincrement())
+    userId       Int
+    carId        Int
+    rating       Int
+    type         CAR_STAT_TYPE @default(racing)
+    speed        Decimal       @db.Decimal(4, 2)
+    handling     Decimal       @db.Decimal(4, 2)
+    acceleration Decimal       @db.Decimal(4, 2)
+    launch       Decimal       @db.Decimal(4, 2)
+    breaking     Decimal       @db.Decimal(4, 2)
+    offroad      Decimal       @db.Decimal(4, 2)
+
+    user User @relation(fields: [userId], references: [id])
+    car  Car  @relation(fields: [carId], references: [id])
+}
+
+enum CAR_STAT_TYPE {
+    racing
+    offroad
+}
+
+enum ROLES {
+    admin
+    user
 }
