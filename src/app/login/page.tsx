@@ -1,3 +1,4 @@
+import LoginLayout from "@/components/Layout/LoginLayout";
 import LoginForm from "@/components/User/LoginForm";
 import { getIronSessionInstance } from "@/methods/session";
 import { Metadata } from "next";
@@ -18,9 +19,11 @@ export default async function RegisterPage() {
     }
 
     return (
-        <div className="register-page">
-            <h1>Log in here!</h1>
-            <LoginForm redirect={"/account"} />
-        </div>
+        <LoginLayout>
+            <div className="register-page">
+                <h1 className="mb-3 text-lg font-bold">Log in here!</h1>
+                <LoginForm redirect={"/account"} />
+            </div>
+        </LoginLayout>
     );
 }

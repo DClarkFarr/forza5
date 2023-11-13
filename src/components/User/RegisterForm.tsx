@@ -77,7 +77,7 @@ export default function RegisterForm(props: RegisterFormProps) {
     };
 
     return (
-        <form onSubmit={onFormSubmit()} className="max-w-[400px]">
+        <form onSubmit={onFormSubmit()} className="max-w-full w-[400px]">
             <div className="form-group">
                 <label className="block">Name</label>
                 <input
@@ -123,13 +123,15 @@ export default function RegisterForm(props: RegisterFormProps) {
                 )}
             </div>
 
-            <button
-                className="btn bg-sky-700"
-                type="submit"
-                disabled={isSubmitting || !isValid}
-            >
-                {isSubmitting ? "Creating account..." : "Create account"}
-            </button>
+            <div className="pt-2">
+                <button
+                    className="btn block w-full bg-sky-700"
+                    type="submit"
+                    disabled={isSubmitting || !isValid}
+                >
+                    {isSubmitting ? "Creating account..." : "Create account"}
+                </button>
+            </div>
         </form>
     );
 }

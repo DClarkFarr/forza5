@@ -75,7 +75,7 @@ export default function LoginForm(props: LoginFormProps) {
     };
 
     return (
-        <form onSubmit={onFormSubmit()} className="max-w-[400px]">
+        <form onSubmit={onFormSubmit()} className="max-w-full w-[400px]">
             <div className="form-group">
                 <label className="block">Email</label>
                 <input
@@ -107,13 +107,15 @@ export default function LoginForm(props: LoginFormProps) {
                 )}
             </div>
 
-            <button
-                className="btn bg-sky-700"
-                type="submit"
-                disabled={isSubmitting || !isValid}
-            >
-                {isSubmitting ? "Logging in..." : "Log in"}
-            </button>
+            <div className="pt-2">
+                <button
+                    className="btn block w-full bg-sky-700"
+                    type="submit"
+                    disabled={isSubmitting || !isValid}
+                >
+                    {isSubmitting ? "Logging in..." : "Log in"}
+                </button>
+            </div>
         </form>
     );
 }
