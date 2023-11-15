@@ -3,6 +3,8 @@
 import { Car } from "@/types/Car";
 import { useMemo } from "react";
 
+import styles from "./carList.module.scss";
+
 export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
     const sortedCars = useMemo(() => {
         return cars.sort((a, b) => {
@@ -21,7 +23,7 @@ export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
                 <div className="text-center">No cars found</div>
             )}
             {sortedCars.length > 0 && (
-                <table>
+                <table className={styles.table}>
                     <thead>
                         <tr>
                             <th>#</th>
