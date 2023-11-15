@@ -1,6 +1,5 @@
 import { loginUser, registerUser } from "@/prisma/methods/user";
 import { NextRequest, NextResponse } from "next/server";
-import { ironSessionMiddleware } from "@/methods/session";
 import { getSessionUser, initializeSession } from "@/actions/sessionActions";
 
 export async function POST(req: NextRequest) {

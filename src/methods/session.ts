@@ -4,6 +4,7 @@ import { getIronSession, IronSession, IronSessionOptions } from "iron-session";
 import { cookies as getCookies } from "next/headers";
 import cookie from "cookie";
 import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { NextRequest } from "next/server";
 
 export const sessionOptions: IronSessionOptions = {
     password: process.env.SECRET_COOKIE_PASSWORD as string,
@@ -26,27 +27,19 @@ export type DynamicSegments = {
 };
 
 export type RouteHandler = (
-    request: Request,
+    request: NextRequest,
     routeSegment: DynamicSegments
 ) => Promise<Response>;
+
+export type IronSessionRequest = NextRequest & { session: IronSession };
+export type IronSessionRequestUser = IronSessionRequest & {
+    session: IronSession & { user: User };
+};
 
 export type RouteHandlerWithSession = (
-    request: Request & { session: IronSession },
+    request: IronSessionRequest,
     routeSegment: DynamicSegments
 ) => Promise<Response>;
-
-export const ironSessionMiddleware = (
-    handler: RouteHandlerWithSession
-): RouteHandler => {
-    return async (request, routeSegment) => {
-        const session = await getIronSessionInstance();
-
-        const sessionRequest = Object.assign(request, { session });
-        const response = await handler(sessionRequest, routeSegment);
-
-        return response;
-    };
-};
 
 export function getIronSessionInstance() {
     // fake request

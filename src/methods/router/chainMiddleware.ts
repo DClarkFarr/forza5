@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type Handler<
+export type MiddlewareCallback<
     A extends NextRequest = NextRequest,
     B extends NextResponse = NextResponse<any>
 > = (req: A, res: B, next: (data?: any) => void) => void;
 
-type FinalCallback<
+export type FinalCallback<
     A extends NextRequest = NextRequest,
     B extends NextResponse = NextResponse<any>
 > = (req: A, res: B) => B | Promise<B>;
 
-type ConvertHandlerArray<HS extends Array<Handler<any>>> = {
-    [K in keyof HS]: HS[K] extends Handler<infer A> ? A : never;
+type ConvertHandlerArray<HS extends Array<MiddlewareCallback<any>>> = {
+    [K in keyof HS]: HS[K] extends MiddlewareCallback<infer A> ? A : never;
 };
 
 export default function chainMiddleware<
-    FS extends Array<Handler<any>>,
+    FS extends Array<MiddlewareCallback<any>>,
     FCR extends ConvertHandlerArray<FS>[number]
 >(callbacks: FS, finalCallback: FinalCallback<FCR>) {
     let responseData: any;
@@ -23,11 +23,13 @@ export default function chainMiddleware<
     const cycleCallback = async <A extends NextRequest, B extends NextResponse>(
         creq: A,
         cres: B,
-        handler: Handler<A, B>
+        handler: MiddlewareCallback<A, B>
     ) => {
         await new Promise((resolve) => {
             const next = (data?: any) => {
-                responseData = data;
+                if (responseData !== undefined) {
+                    responseData = data;
+                }
                 resolve(1);
             };
 
@@ -54,7 +56,7 @@ export default function chainMiddleware<
             }
         }
 
-        if (responseData !== null) {
+        if (responseData !== undefined) {
             if (responseData instanceof Error) {
                 return NextResponse.json(
                     { message: responseData.message },
@@ -63,6 +65,7 @@ export default function chainMiddleware<
             }
             return NextResponse.json(responseData, { status: 410 });
         }
+
         return finalCallback(activeReq as FCR, activeRes);
     };
 }
