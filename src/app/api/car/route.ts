@@ -1,3 +1,4 @@
+import { createCar } from "@/actions/carActions";
 import chainMiddleware from "@/methods/router/chainMiddleware";
 import { IronSessionRequest } from "@/methods/session";
 import {
@@ -11,6 +12,29 @@ export const POST = chainMiddleware(
     async (req: IronSessionRequest) => {
         const body = await req.json();
 
-        return NextResponse.json({ message: "ok" });
+        if (!body.make || !body.model) {
+            return NextResponse.json(
+                { message: "make and model are required" },
+                { status: 400 }
+            );
+        }
+
+        try {
+            const created = await createCar({
+                make: body.make,
+                model: body.model,
+            });
+            return NextResponse.json(created);
+        } catch (err) {
+            return NextResponse.json(
+                {
+                    message:
+                        err instanceof Error
+                            ? err.message || "Error creating car"
+                            : "Unknown Error",
+                },
+                { status: 400 }
+            );
+        }
     }
 );
