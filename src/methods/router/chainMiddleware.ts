@@ -1,25 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type Handler = <A extends NextRequest, B extends NextResponse>(
-    req: A,
-    res: B,
-    next: (data?: any) => void
-) => void;
+type Handler<
+    A extends NextRequest = NextRequest,
+    B extends NextResponse = NextResponse<any>
+> = (req: A, res: B, next: (data?: any) => void) => void;
 
-type FinalCallback = <A extends NextRequest, B extends NextResponse>(
-    req: A,
-    res: B
-) => void;
+type FinalCallback<
+    A extends NextRequest = NextRequest,
+    B extends NextResponse = NextResponse<any>
+> = (req: A, res: B) => B | Promise<B>;
 
-export default function chainMiddleware(...callbacks: Handler[]) {
+type ConvertHandlerArray<HS extends Array<Handler<any>>> = {
+    [K in keyof HS]: HS[K] extends Handler<infer A> ? A : never;
+};
+
+export default function chainMiddleware<
+    FS extends Array<Handler<any>>,
+    FCR extends ConvertHandlerArray<FS>[number]
+>(callbacks: FS, finalCallback: FinalCallback<FCR>) {
     let responseData: any;
-
-    const finalCallback = callbacks.pop() as FinalCallback;
 
     const cycleCallback = async <A extends NextRequest, B extends NextResponse>(
         creq: A,
         cres: B,
-        handler: Handler
+        handler: Handler<A, B>
     ) => {
         await new Promise((resolve) => {
             const next = (data?: any) => {
@@ -30,7 +34,7 @@ export default function chainMiddleware(...callbacks: Handler[]) {
             handler(creq, cres, next);
         });
 
-        return [creq, cres] as [typeof creq, typeof cres];
+        return [creq, cres] as const;
     };
 
     return async (req: NextRequest, res: NextResponse) => {
@@ -59,27 +63,55 @@ export default function chainMiddleware(...callbacks: Handler[]) {
             }
             return NextResponse.json(responseData, { status: 410 });
         }
-        return finalCallback(activeReq, activeRes);
+        return finalCallback(activeReq as FCR, activeRes);
     };
 }
 
-const chained = chainMiddleware(
-    (req, res, next) => {
-        const req1 = req as typeof req & { extra: { hello: number } };
-        req1.extra = { hello: 1 };
+/*
+const testChain1 = [
+    ((req, res, next) => {
+        next();
+    }) as Handler<NextRequest & { session: Record<string, string> }>,
+    ((req, res, next) => {
+        req.extra = { hello: 1 };
 
         next();
-    },
-    (req, res, next) => {
-        const req1 = req as typeof req & {
-            extra: { hello: number; goodbye: number };
-        };
-        req1.extra.goodbye = 2;
+    }) as Handler<NextRequest & { extra: { hello: number } }>,
+    ((req, res, next) => {
+        req.extra.goodbye = 2;
 
         next();
-    },
+    }) as Handler<NextRequest & { extra: { hello: number; goodbye: number } }>,
+];
+
+const chained1 = chainMiddleware(testChain1, (req, res) => {
+    console.log("got req", req);
+
+    return NextResponse.json({ message: "ok" });
+});
+
+const chained2 = chainMiddleware(
+    [
+        ((req, res, next) => {
+            next();
+        }) as Handler<NextRequest & { session: Record<string, string> }>,
+        ((req, res, next) => {
+            req.extra = { hello: 1 };
+
+            next();
+        }) as Handler<NextRequest & { extra: { hello: number } }>,
+        ((req, res, next) => {
+            req.extra.goodbye = 2;
+
+            next();
+        }) as Handler<
+            NextRequest & { extra: { hello: number; goodbye: number } }
+        >,
+    ],
     (req, res) => {
         console.log("got req", req);
+
+        return NextResponse.json({ message: "ok" });
     }
 );
 
@@ -88,6 +120,8 @@ type ReturnTestArray = [() => number, () => string, () => boolean];
 type ConvertFunctionReturns<FS extends ReadonlyArray<ReturnFuncDef>> = {
     [K in keyof FS]: FS[K] extends () => any ? ReturnType<FS[K]> : never;
 };
+
+type TestChain1 = ConvertHandlerArray<typeof testChain1>;
 
 const returnTestArray1 = [
     () => "hey" as const,
@@ -151,3 +185,4 @@ const paramTest1 = [
 type ParamTestValues = ConvertFunctionParams<ParamTestArray>;
 type ParamTestValues1 = ConvertFunctionParams<typeof paramTest1>;
 const paramTestValues1 = chainFunctionParams(paramTest1, 1);
+*/
