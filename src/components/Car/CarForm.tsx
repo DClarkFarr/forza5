@@ -1,9 +1,10 @@
 "use client";
+
 import CarService from "@/services/CarService";
 import { Car } from "@/types/Car";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import FormError from "../Form/FormError";
 
@@ -32,6 +33,15 @@ export default function CarForm(props: CarFormProps) {
     });
 
     const [mainError, setMainError] = useState("");
+
+    const tr = useMemo(() => {
+        return {
+            buttonDefault: props.car?.id ? "Update Car" : "Create Car",
+            buttonSubmitting: props.car?.id
+                ? "Updating Car..."
+                : "Creating Car...",
+        };
+    }, [props.car]);
 
     const handleCreateCar = async (data: CarFormState) => {
         const createMethod =
@@ -105,7 +115,7 @@ export default function CarForm(props: CarFormProps) {
                     type="submit"
                     disabled={isSubmitting || !isValid}
                 >
-                    {isSubmitting ? "Creating car..." : "Create car"}
+                    {isSubmitting ? tr.buttonSubmitting : tr.buttonDefault}
                 </button>
             </div>
         </form>

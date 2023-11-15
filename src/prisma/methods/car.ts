@@ -27,3 +27,11 @@ export async function findCar({ make, model }: CarData): Promise<Car | null> {
         },
     });
 }
+
+export async function findCarById(id: number): Promise<Car | null> {
+    return prisma.car.findUnique({
+        where: {
+            id,
+        },
+    });
+}
