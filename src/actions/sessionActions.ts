@@ -2,6 +2,7 @@
 
 import { User } from ".prisma/client";
 import { getIronSessionInstance } from "@/methods/session";
+import { findUserById } from "@/prisma/methods/user";
 
 export const initializeSession = async (user: User) => {
     const session = await getIronSessionInstance();
@@ -16,5 +17,8 @@ export const destroySession = async () => {
 
 export const getSessionUser = async () => {
     const session = await getIronSessionInstance();
-    return session.user;
+    if (!session.user) {
+        throw new Error("No session user");
+    }
+    return await findUserById(session.user.id);
 };

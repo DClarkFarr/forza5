@@ -43,7 +43,7 @@ export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
                                         {isAdmin && (
                                             <div className="flex gap-x-2">
                                                 <a
-                                                    href={`/admin/cars/${car.id}/edit`}
+                                                    href={`/account/car/${car.id}/edit`}
                                                 >
                                                     Edit
                                                 </a>

@@ -1,6 +1,11 @@
 import { validateEmail } from "@/methods/validate";
 import { prisma } from "@/prisma";
 
+export const findUserById = async (id: number) => {
+    const user = await prisma.user.findUnique({ where: { id } });
+    return user;
+};
+
 export const registerUser = async (
     name: string,
     email: string,
