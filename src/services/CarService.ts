@@ -6,4 +6,8 @@ export default class CarService {
     static create(data: CarFormState): Promise<Car> {
         return webApi.post("/car", data).then(({ data }) => data);
     }
+
+    static update(id: number, data: CarFormState): Promise<Car> {
+        return webApi.put(`/car/${id}`, data).then(({ data }) => data);
+    }
 }

@@ -25,7 +25,7 @@ export default async function EditCarPage({
             )}
             {!car && (
                 <>
-                    <div>You don't have a car!</div>
+                    <div>You dont have a car!</div>
                 </>
             )}
         </div>

@@ -19,11 +19,17 @@ export async function insertCar({ make, model }: CarData): Promise<Car> {
     });
 }
 
-export async function findCar({ make, model }: CarData): Promise<Car | null> {
+export async function findCar(
+    { make, model }: CarData,
+    edcludeId?: number
+): Promise<Car | null> {
     return prisma.car.findFirst({
         where: {
             make,
             model,
+            NOT: {
+                id: edcludeId,
+            },
         },
     });
 }
@@ -33,5 +39,14 @@ export async function findCarById(id: number): Promise<Car | null> {
         where: {
             id,
         },
+    });
+}
+
+export async function updateCarById(id: number, data: CarData): Promise<Car> {
+    return prisma.car.update({
+        where: {
+            id,
+        },
+        data,
     });
 }

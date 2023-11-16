@@ -1,4 +1,4 @@
-import { createCar, updateCar } from "@/actions/carActions";
+import { updateCar } from "@/actions/carActions";
 import chainMiddleware from "@/methods/router/chainMiddleware";
 import { IronSessionRequest } from "@/methods/session";
 import {
@@ -7,10 +7,12 @@ import {
 } from "@/middleware/sessionMiddleware";
 import { NextResponse } from "next/server";
 
-export const POST = chainMiddleware(
+export const PUT = chainMiddleware(
     [hasSessionMiddleware, hasUserMiddleware()],
-    async (req: IronSessionRequest) => {
+    async (req: IronSessionRequest, res: { params: { carId: string } }) => {
         const body = await req.json();
+
+        const id = Number(res.params.carId);
 
         if (!body.make || !body.model) {
             return NextResponse.json(
@@ -20,7 +22,7 @@ export const POST = chainMiddleware(
         }
 
         try {
-            const created = await createCar({
+            const created = await updateCar(id, {
                 make: body.make,
                 model: body.model,
             });

@@ -14,7 +14,8 @@ export type CarFormState = {
 };
 export type CarFormProps = {
     car?: Car;
-    onSubmit?: (data: CarFormState) => Promise<Car>;
+    onCreate?: (data: CarFormState) => Promise<Car>;
+    onUpdate?: (id: number, data: CarFormState) => Promise<Car>;
     onSuccess?: (user: Car) => void;
 };
 export default function CarForm(props: CarFormProps) {
@@ -45,8 +46,8 @@ export default function CarForm(props: CarFormProps) {
 
     const handleCreateCar = async (data: CarFormState) => {
         const createMethod =
-            typeof props.onSubmit === "function"
-                ? props.onSubmit
+            typeof props.onCreate === "function"
+                ? props.onCreate
                 : CarService.create;
 
         try {
@@ -64,10 +65,34 @@ export default function CarForm(props: CarFormProps) {
             }
         }
     };
+
+    const handleUpdateCar = async (idCar: number, data: CarFormState) => {
+        const updateMethod =
+            typeof props.onUpdate === "function"
+                ? props.onUpdate
+                : CarService.update;
+
+        try {
+            const car = await updateMethod(props!.car!.id, data);
+            if (typeof props.onSuccess === "function") {
+                props.onSuccess(car);
+            } else {
+                console.log("do what?");
+            }
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                setMainError(
+                    err.response?.data.message || "Error updating car"
+                );
+            }
+        }
+    };
+
     const onFormSubmit = () => {
         return handleSubmit((data) => {
             setMainError("");
             if (props.car) {
+                return handleUpdateCar(props.car.id, data);
             } else {
                 return handleCreateCar(data);
             }

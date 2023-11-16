@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export type MiddlewareCallback<
-    A extends NextRequest = NextRequest,
-    B extends NextResponse = NextResponse<any>
-> = (req: A, res: B, next: (data?: any) => void) => void;
+export type MiddlewareCallback<A extends NextRequest = NextRequest> = <
+    B extends object
+>(
+    req: A,
+    res: B,
+    next: (data?: any) => void
+) => void;
 
-export type FinalCallback<
-    A extends NextRequest = NextRequest,
-    B extends NextResponse = NextResponse<any>
-> = (req: A, res: B) => B | Promise<B>;
+export type FinalCallback<A extends NextRequest = NextRequest> = (
+    req: A,
+    res: any
+) => Promise<NextResponse>;
 
 type ConvertHandlerArray<HS extends Array<MiddlewareCallback<any>>> = {
     [K in keyof HS]: HS[K] extends MiddlewareCallback<infer A> ? A : never;
@@ -20,10 +23,10 @@ export default function chainMiddleware<
 >(callbacks: FS, finalCallback: FinalCallback<FCR>) {
     let responseData: any;
 
-    const cycleCallback = async <A extends NextRequest, B extends NextResponse>(
+    const cycleCallback = async <A extends NextRequest, B extends object>(
         creq: A,
         cres: B,
-        handler: MiddlewareCallback<A, B>
+        handler: MiddlewareCallback<A>
     ) => {
         await new Promise((resolve) => {
             const next = (data?: any) => {
