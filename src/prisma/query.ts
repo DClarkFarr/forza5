@@ -38,9 +38,15 @@ export const useCacheQuery = <
             });
     };
 
-    const clear = async (key: string) => {
+    const clear = async (key: string | string[]) => {
         "use server";
-        revalidateTag(key);
+        if (Array.isArray(key)) {
+            for (let k of key) {
+                revalidateTag(k);
+            }
+        } else {
+            revalidateTag(key);
+        }
     };
 
     return { query, clear: clear.bind(null, key) };
