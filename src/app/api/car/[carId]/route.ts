@@ -5,7 +5,26 @@ import {
     hasSessionMiddleware,
     hasUserMiddleware,
 } from "@/middleware/sessionMiddleware";
+import { findCarById } from "@/prisma/methods/car";
 import { NextResponse } from "next/server";
+
+export const GET = chainMiddleware(
+    [hasSessionMiddleware, hasUserMiddleware()],
+    async (req: IronSessionRequest, res: { params: { carId: string } }) => {
+        const id = Number(res.params.carId);
+
+        const car = await findCarById(id);
+
+        if (!car) {
+            return NextResponse.json(
+                { message: "Car not found" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json(car);
+    }
+);
 
 export const PUT = chainMiddleware(
     [hasSessionMiddleware, hasUserMiddleware()],

@@ -1,4 +1,4 @@
-import { createCar, updateCar } from "@/actions/carActions";
+import { createCar } from "@/actions/carActions";
 import chainMiddleware from "@/methods/router/chainMiddleware";
 import { IronSessionRequest } from "@/methods/session";
 import {
