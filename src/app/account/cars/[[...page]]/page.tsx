@@ -1,6 +1,7 @@
 import { getPaginatedCars } from "@/actions/carActions";
 import { getSessionUser } from "@/actions/sessionActions";
 import { CarsList } from "@/components/Car/CarsList";
+import { usePaginatedCarsQuery } from "@/queries/car";
 import Link from "next/link";
 
 export default async function AccountCardsPage({
@@ -10,7 +11,8 @@ export default async function AccountCardsPage({
 }) {
     const pageNum = Number(params.page) || 1;
 
-    const cars = await getPaginatedCars({ page: pageNum });
+    const carsQuery = usePaginatedCarsQuery(pageNum);
+    const cars = await carsQuery.query();
     const user = (await getSessionUser())!;
 
     return (

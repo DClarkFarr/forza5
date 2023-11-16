@@ -15,8 +15,8 @@ export const useCacheQuery = <
 >(
     url: string,
     data?: object | null,
-    callback?: F,
-    key: string = url
+    callback?: F | null,
+    key: string | string[] = url
 ) => {
     const parsedUrl = new URL(url, getCurrentOrigin());
     if (data) {
@@ -26,7 +26,9 @@ export const useCacheQuery = <
     }
 
     const query = async () => {
-        return fetch(parsedUrl.toString(), { next: { tags: [key] } })
+        return fetch(parsedUrl.toString(), {
+            next: { tags: Array.isArray(key) ? key : [key] },
+        })
             .then((res) => res.json())
             .then((value) => {
                 if (typeof callback === "function") {

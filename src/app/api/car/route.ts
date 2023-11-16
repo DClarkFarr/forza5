@@ -1,4 +1,4 @@
-import { createCar } from "@/actions/carActions";
+import { createCar, getPaginatedCars } from "@/actions/carActions";
 import chainMiddleware from "@/methods/router/chainMiddleware";
 import { IronSessionRequest } from "@/methods/session";
 import {
@@ -6,6 +6,19 @@ import {
     hasUserMiddleware,
 } from "@/middleware/sessionMiddleware";
 import { NextResponse } from "next/server";
+
+export const GET = chainMiddleware(
+    [hasSessionMiddleware, hasUserMiddleware()],
+    async (req: IronSessionRequest) => {
+        const searchParams = req.nextUrl.searchParams;
+        const cars = await getPaginatedCars({
+            limit: Number(searchParams.get("limit")) || 10,
+            page: Number(searchParams.get("page")) || 1,
+        });
+
+        return NextResponse.json(cars);
+    }
+);
 
 export const POST = chainMiddleware(
     [hasSessionMiddleware, hasUserMiddleware()],
