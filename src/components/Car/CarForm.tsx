@@ -34,6 +34,7 @@ export default function CarForm(props: CarFormProps) {
     });
 
     const [mainError, setMainError] = useState("");
+    const [isRedirecting, setIsRedirecting] = useState(false);
 
     const tr = useMemo(() => {
         return {
@@ -52,6 +53,10 @@ export default function CarForm(props: CarFormProps) {
 
         try {
             const car = await createMethod(data);
+            setIsRedirecting(true);
+            setTimeout(() => {
+                setIsRedirecting(false);
+            }, 4000);
             if (typeof props.onSuccess === "function") {
                 props.onSuccess(car);
             } else {
@@ -140,7 +145,9 @@ export default function CarForm(props: CarFormProps) {
                     type="submit"
                     disabled={isSubmitting || !isValid}
                 >
-                    {isSubmitting ? tr.buttonSubmitting : tr.buttonDefault}
+                    {isSubmitting || isRedirecting
+                        ? tr.buttonSubmitting
+                        : tr.buttonDefault}
                 </button>
             </div>
         </form>
