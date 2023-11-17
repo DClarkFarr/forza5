@@ -1,13 +1,16 @@
 import CarForm from "@/components/Car/CarForm";
 import { usePaginatedCarsQuery } from "@/queries/car";
+import { Car } from "@/types/Car";
+import { redirect } from "next/navigation";
 
 export default async function CreateCarPage() {
     const carsQuery = usePaginatedCarsQuery();
 
-    const onSuccess = async () => {
+    const onSuccess = async (car: Car) => {
         "use server";
 
         carsQuery.clearAll();
+        redirect(`/account/car/${car.id}/edit`);
     };
 
     return (

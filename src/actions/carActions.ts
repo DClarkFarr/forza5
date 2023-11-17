@@ -1,11 +1,15 @@
+"use server";
+
 import {
     CarData,
+    deleteCarById,
     findCar,
     findCarById,
     getCars,
     insertCar,
     updateCarById,
 } from "@/prisma/methods/car";
+import { getPaginatedCarsQuery } from "@/queries/car";
 
 export async function getPaginatedCars({ limit = 10, page = 1 }) {
     const offset = (page - 1) * limit;
@@ -48,4 +52,12 @@ export async function updateCar(id: number, { make, model }: CarData) {
     }
 
     return updateCarById(id, { make: makeTrimmed, model: modelTrimmed });
+}
+
+export async function deleteCar(id: number) {
+    const query = getPaginatedCarsQuery();
+    const res = await deleteCarById(id);
+    await query.clearAll();
+
+    return res;
 }

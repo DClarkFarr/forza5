@@ -20,3 +20,5 @@ export const usePaginatedCarsQuery = (page: number = 1) => {
         },
     });
 };
+
+export const getPaginatedCarsQuery = usePaginatedCarsQuery;

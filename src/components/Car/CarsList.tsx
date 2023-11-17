@@ -1,9 +1,10 @@
 "use client";
 
 import { Car } from "@/types/Car";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import styles from "./carList.module.scss";
+import { deleteCar } from "@/actions/carActions";
 
 export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
     const sortedCars = useMemo(() => {
@@ -16,7 +17,13 @@ export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
         });
     }, [cars]);
 
-    const onClickDelete = (id: number) => {};
+    const [isDeleting, setDeleting] = useState<boolean | number>(false);
+
+    const onClickDelete = async (id: number) => {
+        setDeleting(id);
+        await deleteCar(id);
+        setDeleting(false);
+    };
     return (
         <>
             {!sortedCars.length && (
@@ -44,16 +51,23 @@ export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
                                             <div className="flex gap-x-2">
                                                 <a
                                                     href={`/account/car/${car.id}/edit`}
+                                                    className="btn-link text-sky-700"
                                                 >
                                                     Edit
                                                 </a>
-                                                <a
+                                                <button
+                                                    className="btn-link text-red-700"
                                                     onClick={() =>
                                                         onClickDelete(car.id)
                                                     }
+                                                    disabled={
+                                                        isDeleting === car.id
+                                                    }
                                                 >
-                                                    Delete
-                                                </a>
+                                                    {isDeleting === car.id
+                                                        ? "Deleting..."
+                                                        : "Delete"}
+                                                </button>
                                             </div>
                                         )}
                                     </td>

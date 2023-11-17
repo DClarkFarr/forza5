@@ -1,4 +1,3 @@
-import { getPaginatedCars } from "@/actions/carActions";
 import { getSessionUser } from "@/actions/sessionActions";
 import { CarsList } from "@/components/Car/CarsList";
 import { usePaginatedCarsQuery } from "@/queries/car";

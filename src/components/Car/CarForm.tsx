@@ -16,7 +16,7 @@ export type CarFormProps = {
     car?: Car;
     onCreate?: (data: CarFormState) => Promise<Car>;
     onUpdate?: (id: number, data: CarFormState) => Promise<Car>;
-    onSuccess?: (user: Car) => void;
+    onSuccess?: (car: Car) => void;
 };
 export default function CarForm(props: CarFormProps) {
     const { push } = useRouter();
