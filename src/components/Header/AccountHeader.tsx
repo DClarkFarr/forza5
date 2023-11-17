@@ -13,11 +13,15 @@ export default function AccountHeader({ user }: { user: User }) {
 
     const pathname = usePathname();
 
-    const bindLink = (href: string) => {
+    const bindLink = (href: string, toMatch = href, nested = false) => {
+        const isActive = nested
+            ? !!pathname.match(new RegExp(`^${toMatch}`))
+            : toMatch === pathname;
+
         return {
             href,
             className: `btn-link text-sky-700 ${styles.navLink}`,
-            "data-active": pathname === href,
+            "data-active": isActive,
         };
     };
 
@@ -38,7 +42,9 @@ export default function AccountHeader({ user }: { user: User }) {
                     <Link {...bindLink("/account/stats")}>My Stats</Link>
                 </div>
                 <div>
-                    <Link {...bindLink("/account/cars")}>Manage Cars</Link>
+                    <Link {...bindLink("/account/cars", "/account/car", true)}>
+                        Manage Cars
+                    </Link>
                 </div>
                 <div onClick={onClickLogout}>
                     <button className="btn-link text-sky-700">Logout</button>
