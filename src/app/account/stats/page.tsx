@@ -1,3 +1,4 @@
+import MyStatsPage from "@/pages/MyStatsPage";
 import { Metadata } from "next";
 
 export function metadata(): Metadata {
@@ -8,17 +9,13 @@ export function metadata(): Metadata {
     };
 }
 
-export default async function MyStatsPage() {
+export default async function StatsPage() {
     return (
         <div>
-            <div className="flex">
-                <div className="flex-1">
-                    <h1>My Stats</h1>
-                </div>
-                <div className="flex-1">
-                    <button className="btn bg-sky-700">Add Stat</button>
-                </div>
+            <div className="mb-8">
+                <h1 className="font-bold text-lg">My Stats</h1>
             </div>
+            <MyStatsPage />
         </div>
     );
 }
