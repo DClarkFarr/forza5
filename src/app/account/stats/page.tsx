@@ -1,6 +1,7 @@
 import { getSessionUser } from "@/actions/sessionActions";
 import MyStatsPage from "@/pages/MyStatsPage";
-import { getCars, getUserCarsByUserId } from "@/prisma/methods/car";
+import { getCars } from "@/prisma/methods/car";
+import { getPaginatedUserCars } from "@/prisma/methods/userCar";
 import { Metadata } from "next";
 
 export function metadata(): Metadata {
@@ -19,7 +20,7 @@ export default async function StatsPage() {
         return <div>Not logged in</div>;
     }
 
-    const userCars = await getUserCarsByUserId(user.id);
+    const userCars = await getPaginatedUserCars(user.id, 0, 1000, true);
 
     return (
         <div>

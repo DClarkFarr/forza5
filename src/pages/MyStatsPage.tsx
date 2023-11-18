@@ -14,7 +14,7 @@ export default function MyStatsPage({
 }: {
     user: User;
     cars: Car[];
-    userCars: UserCar[];
+    userCars: UserCar<true>[];
 }) {
     const [showForm, setShowForm] = useState(false);
 
@@ -55,22 +55,30 @@ export default function MyStatsPage({
                             <th>Breaking</th>
                             <th>Offroat</th>
                             <th>Score</th>
-                            <th>Action</th>
+                            <th>
+                                <div className="pl-3">Action</div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {userCars.map((userCar) => (
                             <tr key={userCar.id}>
-                                <th>Car</th>
-                                <th>{userCar.rating}</th>
-                                <th>{userCar.speed}</th>
-                                <th>{userCar.handling}</th>
-                                <th>{userCar.acceleration}</th>
-                                <th>{userCar.launch}</th>
-                                <th>{userCar.breaking}</th>
-                                <th>{userCar.offroad}</th>
-                                <th>Score</th>
-                                <th>Action</th>
+                                <th>
+                                    {userCar.car.make} {userCar.car.model}
+                                </th>
+                                <td>{userCar.rating.toFixed(1)}</td>
+                                <td>{userCar.speed.toFixed(1)}</td>
+                                <td>{userCar.handling.toFixed(1)}</td>
+                                <td>{userCar.acceleration.toFixed(1)}</td>
+                                <td>{userCar.launch.toFixed(1)}</td>
+                                <td>{userCar.breaking.toFixed(1)}</td>
+                                <td>{userCar.offroad.toFixed(1)}</td>
+                                <td>Score</td>
+                                <td>
+                                    <button className="btn-link text-red-600">
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

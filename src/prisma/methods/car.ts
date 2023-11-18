@@ -63,16 +63,6 @@ export async function getUserCarsByCarId(carId: number) {
     return results.map(toUserCar);
 }
 
-export async function getUserCarsByUserId(userId: number) {
-    const results = await prisma.userCar.findMany({
-        where: {
-            userId,
-        },
-    });
-
-    return results.map(toUserCar);
-}
-
 export async function deleteCarById(id: number): Promise<Car> {
     const userCars = await getUserCarsByCarId(id);
     if (userCars.length) {

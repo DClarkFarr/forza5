@@ -1,12 +1,14 @@
 import { prisma } from "@/prisma";
 import { findUserById } from "./user";
-import { UserCar as PrismaUserCar } from "@prisma/client";
+import { UserCar as PrismaUserCar, Car as PrismaCar } from "@prisma/client";
 import { UserCar } from "@/types/User";
+import { Car } from "@/types/Car";
 
-export async function getPaginatedUserCars(
+export async function getPaginatedUserCars<C extends boolean>(
     userId: number,
     offset = 0,
-    limit = 10
+    limit = 10,
+    includeCar = false as C
 ) {
     const userCars = await prisma.userCar.findMany({
         where: {
@@ -14,9 +16,14 @@ export async function getPaginatedUserCars(
         },
         skip: offset,
         take: limit,
+        include: {
+            car: includeCar,
+        },
     });
 
-    return userCars.map(toUserCar);
+    return userCars.map(toUserCar) as (C extends true
+        ? UserCar<true>
+        : UserCar)[];
 }
 
 export async function insertUserCar(
@@ -52,9 +59,18 @@ export async function insertUserCar(
     return toUserCar(userCar);
 }
 
-export function toUserCar(userCar: PrismaUserCar): UserCar {
+export function toCar(car: PrismaCar): Car {
+    return {
+        ...car,
+    };
+}
+
+export function toUserCar<Input extends PrismaUserCar & { car?: PrismaCar }>(
+    userCar: Input
+): UserCar<true> {
     return {
         ...userCar,
+        car: userCar.car ? toCar(userCar.car) : (undefined as never),
         speed: parseFloat(userCar.speed.toFixed(1)),
         handling: parseFloat(userCar.handling.toFixed(1)),
         acceleration: parseFloat(userCar.acceleration.toFixed(1)),
