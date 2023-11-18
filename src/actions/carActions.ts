@@ -9,7 +9,11 @@ import {
     insertCar,
     updateCarById,
 } from "@/prisma/methods/car";
-import { getPaginatedCarsQuery } from "@/queries/car";
+import { insertUserCar } from "@/prisma/methods/userCar";
+import {
+    getPaginatedCarsQuery,
+    getPaginatedUserCarsQuery,
+} from "@/queries/car";
 
 export async function getPaginatedCars({ limit = 10, page = 1 }) {
     const offset = (page - 1) * limit;
@@ -60,4 +64,15 @@ export async function deleteCar(id: number) {
     await query.clearAll();
 
     return res;
+}
+
+export async function createUserCar(
+    userId: number,
+    data: { rating: number; carId: number }
+) {
+    const inserted = await insertUserCar(userId, data);
+    const query = getPaginatedUserCarsQuery();
+    await query.clearAll();
+
+    return inserted;
 }

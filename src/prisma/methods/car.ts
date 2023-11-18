@@ -1,6 +1,7 @@
 import { prisma } from "@/prisma";
 import { Car } from "@/types/Car";
 import { UserCar } from "@/types/User";
+import { toUserCar } from "./userCar";
 
 export async function getCars({ limit = 10, offset = 0 }) {
     return prisma.car.findMany({
@@ -53,13 +54,23 @@ export async function updateCarById(id: number, data: CarData): Promise<Car> {
 }
 
 export async function getUserCarsByCarId(carId: number) {
-    const results = prisma.userCar.findMany({
+    const results = await prisma.userCar.findMany({
         where: {
             carId,
         },
     });
 
-    return results;
+    return results.map(toUserCar);
+}
+
+export async function getUserCarsByUserId(userId: number) {
+    const results = await prisma.userCar.findMany({
+        where: {
+            userId,
+        },
+    });
+
+    return results.map(toUserCar);
 }
 
 export async function deleteCarById(id: number): Promise<Car> {

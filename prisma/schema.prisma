@@ -35,12 +35,12 @@ model UserCar {
     carId        Int
     rating       Int
     type         CAR_STAT_TYPE @default(racing)
-    speed        Decimal       @db.Decimal(4, 2)
-    handling     Decimal       @db.Decimal(4, 2)
-    acceleration Decimal       @db.Decimal(4, 2)
-    launch       Decimal       @db.Decimal(4, 2)
-    breaking     Decimal       @db.Decimal(4, 2)
-    offroad      Decimal       @db.Decimal(4, 2)
+    speed        Decimal       @default(0.0) @db.Decimal(4, 1)
+    handling     Decimal       @default(0.0) @db.Decimal(4, 1)
+    acceleration Decimal       @default(0.0) @db.Decimal(4, 1)
+    launch       Decimal       @default(0.0) @db.Decimal(4, 1)
+    breaking     Decimal       @default(0.0) @db.Decimal(4, 1)
+    offroad      Decimal       @default(0.0) @db.Decimal(4, 1)
 
     user User @relation(fields: [userId], references: [id])
     car  Car  @relation(fields: [carId], references: [id])
