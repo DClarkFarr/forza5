@@ -20,6 +20,10 @@ export default function StatInput({
         onChange(toSet);
     };
 
+    const onFocusSelect = () => {
+        inputRef.current?.select();
+    };
+
     return (
         <div className="relative">
             <input
@@ -31,6 +35,7 @@ export default function StatInput({
                 className="form-control w-20 pr-1 pl-2"
                 defaultValue={value}
                 onInput={onInput}
+                onFocus={onFocusSelect}
             />
         </div>
     );
