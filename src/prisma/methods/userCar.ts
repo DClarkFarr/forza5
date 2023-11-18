@@ -8,13 +8,15 @@ export async function getPaginatedUserCars(
     offset = 0,
     limit = 10
 ) {
-    return prisma.userCar.findMany({
+    const userCars = await prisma.userCar.findMany({
         where: {
             userId,
         },
         skip: offset,
         take: limit,
     });
+
+    return userCars.map(toUserCar);
 }
 
 export async function insertUserCar(
@@ -47,7 +49,7 @@ export async function insertUserCar(
         },
     });
 
-    return userCar;
+    return toUserCar(userCar);
 }
 
 export function toUserCar(userCar: PrismaUserCar): UserCar {

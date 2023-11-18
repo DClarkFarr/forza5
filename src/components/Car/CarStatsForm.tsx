@@ -9,7 +9,6 @@ function createSelection(
     start: number,
     end: number
 ) {
-    console.log("selection range was", field.setSelectionRange);
     if (field.setSelectionRange) {
         field.focus();
         field.setSelectionRange(start, end);
@@ -48,6 +47,14 @@ export default function CarStatsForm({
 
     const resetForm = () => {
         setFormState({ carId: "", rating: "" });
+
+        if (ratingRef.current) {
+            ratingRef.current.value = "";
+        }
+
+        if (selectRef.current) {
+            (selectRef.current as { clearValue: () => void }).clearValue();
+        }
     };
 
     const onFormSubmit = (e: FormEvent) => {
@@ -69,6 +76,7 @@ export default function CarStatsForm({
     };
 
     const ratingRef = useRef<HTMLInputElement>(null);
+    const selectRef = useRef(null);
 
     const onSelectNextInput = () => {
         ratingRef.current?.focus();
@@ -109,6 +117,7 @@ export default function CarStatsForm({
                 <div>
                     <label>Select Car</label>
                     <Select
+                        ref={selectRef}
                         name="carId"
                         options={carOptions}
                         className="basic-multi-select"
