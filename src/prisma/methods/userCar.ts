@@ -79,3 +79,18 @@ export function toUserCar<Input extends PrismaUserCar & { car?: PrismaCar }>(
         offroad: parseFloat(userCar.offroad.toFixed(1)),
     };
 }
+
+export async function updateUserCarColumn(
+    userCarId: number,
+    column: keyof Omit<UserCar, "id" | "userId" | "carId">,
+    value: number
+) {
+    return prisma.userCar.update({
+        where: {
+            id: userCarId,
+        },
+        data: {
+            [column]: value,
+        },
+    });
+}

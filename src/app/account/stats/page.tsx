@@ -21,7 +21,6 @@ export default async function StatsPage() {
     }
 
     const userCars = await getPaginatedUserCars(user.id, 0, 1000, true);
-
     return (
         <div>
             <div className="mb-8">

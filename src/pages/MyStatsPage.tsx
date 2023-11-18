@@ -6,6 +6,8 @@ import { User, UserCar } from "@/types/User";
 import { useState } from "react";
 
 import styles from "@/components/car/carList.module.scss";
+import StatInput from "@/components/Control/StatInput";
+import { updateUserCarStat } from "@/actions/userCarActions";
 
 export default function MyStatsPage({
     cars,
@@ -20,6 +22,14 @@ export default function MyStatsPage({
 
     const submitUserCar = async (data: { rating: number; carId: number }) => {
         await createUserCar(user.id, data);
+    };
+
+    const saveUserCarStat = (
+        userCarId: number,
+        column: keyof Omit<UserCar, "id" | "userId" | "carId">,
+        value: number
+    ) => {
+        updateUserCarStat(userCarId, column, value);
     };
 
     return (
@@ -67,7 +77,16 @@ export default function MyStatsPage({
                                     {userCar.car.make} {userCar.car.model}
                                 </th>
                                 <td>{userCar.rating.toFixed(1)}</td>
-                                <td>{userCar.speed.toFixed(1)}</td>
+                                <td>
+                                    <StatInput
+                                        initialValue={userCar.speed}
+                                        onChange={saveUserCarStat.bind(
+                                            null,
+                                            userCar.id,
+                                            "speed"
+                                        )}
+                                    />
+                                </td>
                                 <td>{userCar.handling.toFixed(1)}</td>
                                 <td>{userCar.acceleration.toFixed(1)}</td>
                                 <td>{userCar.launch.toFixed(1)}</td>
@@ -75,7 +94,10 @@ export default function MyStatsPage({
                                 <td>{userCar.offroad.toFixed(1)}</td>
                                 <td>Score</td>
                                 <td>
-                                    <button className="btn-link text-red-600">
+                                    <button
+                                        className="btn-link text-red-600"
+                                        tabIndex={-1}
+                                    >
                                         Delete
                                     </button>
                                 </td>
