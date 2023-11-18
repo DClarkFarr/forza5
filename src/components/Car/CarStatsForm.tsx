@@ -65,10 +65,16 @@ export default function CarStatsForm({
         }
         setSubmitting(true);
 
-        onSubmit({
-            carId: Number(formState.carId),
-            rating: Number(formState.rating),
-        });
+        try {
+            onSubmit({
+                carId: Number(formState.carId),
+                rating: Number(formState.rating),
+            });
+        } catch (err) {
+            if (err instanceof Error) {
+                console.log("got a little error", err);
+            }
+        }
 
         setSubmitting(false);
 

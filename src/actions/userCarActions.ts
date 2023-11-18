@@ -17,8 +17,6 @@ export async function updateUserCarStat(
 
 export async function deleteUserCar(userId: number, userCarId: number) {
     const query = getPaginatedUserCarsQuery();
-    const res = await deleteUserCarDb(userId, userCarId);
+    await deleteUserCarDb(userId, userCarId);
     await query.clearAll();
-
-    return res;
 }

@@ -19,9 +19,18 @@ export default function MyStatsPage({
     userCars: UserCar<true>[];
 }) {
     const [showForm, setShowForm] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const submitUserCar = async (data: { rating: number; carId: number }) => {
-        await createUserCar(user.id, data);
+        setErrorMessage("");
+
+        try {
+            await createUserCar(user.id, data);
+        } catch (err) {
+            if (err instanceof Error) {
+                setErrorMessage(err.message);
+            }
+        }
     };
 
     const saveUserCarStat = (
@@ -52,6 +61,11 @@ export default function MyStatsPage({
                 {showForm && (
                     <div>
                         <CarStatsForm cars={cars} onSubmit={submitUserCar} />
+                        {!!errorMessage && (
+                            <div className="pt-0 pb-4 text-red-700">
+                                {errorMessage}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
