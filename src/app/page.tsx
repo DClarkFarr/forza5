@@ -14,7 +14,7 @@ export default async function Home() {
     const user = await getSessionUser();
 
     return (
-        <HomeLayout user={user}>
+        <HomeLayout user={user || undefined}>
             <div className="welcome w-full flex flex-col items-center justify-center h-[400px]">
                 <div>
                     <h2>Welcome to Forza 5 Calculator!</h2>
