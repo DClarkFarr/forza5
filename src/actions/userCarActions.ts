@@ -3,6 +3,7 @@
 import { updateUserCarColumn } from "@/prisma/methods/userCar";
 import { getPaginatedUserCarsQuery } from "@/queries/car";
 import { UserCar } from "@/types/User";
+import { deleteUserCar as deleteUserCarDb } from "@/prisma/methods/userCar";
 
 export async function updateUserCarStat(
     userCarId: number,
@@ -12,4 +13,12 @@ export async function updateUserCarStat(
     await updateUserCarColumn(userCarId, column, value);
     const query = getPaginatedUserCarsQuery();
     await query.clearAll();
+}
+
+export async function deleteUserCar(userId: number, userCarId: number) {
+    const query = getPaginatedUserCarsQuery();
+    const res = await deleteUserCarDb(userId, userCarId);
+    await query.clearAll();
+
+    return res;
 }

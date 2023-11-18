@@ -94,3 +94,12 @@ export async function updateUserCarColumn(
         },
     });
 }
+
+export async function deleteUserCar(userId: number, userCarId: number) {
+    return prisma.userCar.delete({
+        where: {
+            id: userCarId,
+            userId,
+        },
+    });
+}

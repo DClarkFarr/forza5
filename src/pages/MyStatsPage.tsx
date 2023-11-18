@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import styles from "@/components/car/carList.module.scss";
 import StatInput from "@/components/Control/StatInput";
-import { updateUserCarStat } from "@/actions/userCarActions";
+import { deleteUserCar, updateUserCarStat } from "@/actions/userCarActions";
 
 export default function MyStatsPage({
     cars,
@@ -30,6 +30,10 @@ export default function MyStatsPage({
         value: number
     ) => {
         updateUserCarStat(userCarId, column, value);
+    };
+
+    const onDeleteUserCar = (userCarId: number) => {
+        deleteUserCar(user.id, userCarId);
     };
 
     return (
@@ -142,6 +146,10 @@ export default function MyStatsPage({
                                     <button
                                         className="btn-link text-red-600"
                                         tabIndex={-1}
+                                        onClick={onDeleteUserCar.bind(
+                                            null,
+                                            userCar.id
+                                        )}
                                     >
                                         Delete
                                     </button>
