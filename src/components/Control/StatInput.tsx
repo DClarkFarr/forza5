@@ -28,7 +28,7 @@ export default function StatInput({
                 step="0.1"
                 min="0"
                 max="10"
-                className="form-control"
+                className="form-control w-20 pr-1 pl-2"
                 defaultValue={value}
                 onInput={onInput}
             />

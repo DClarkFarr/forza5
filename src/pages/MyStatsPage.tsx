@@ -76,7 +76,7 @@ export default function MyStatsPage({
                                 <th>
                                     {userCar.car.make} {userCar.car.model}
                                 </th>
-                                <td>{userCar.rating.toFixed(1)}</td>
+                                <td>{userCar.rating}</td>
                                 <td>
                                     <StatInput
                                         initialValue={userCar.speed}
@@ -87,11 +87,56 @@ export default function MyStatsPage({
                                         )}
                                     />
                                 </td>
-                                <td>{userCar.handling.toFixed(1)}</td>
-                                <td>{userCar.acceleration.toFixed(1)}</td>
-                                <td>{userCar.launch.toFixed(1)}</td>
-                                <td>{userCar.breaking.toFixed(1)}</td>
-                                <td>{userCar.offroad.toFixed(1)}</td>
+                                <td>
+                                    <StatInput
+                                        initialValue={userCar.handling}
+                                        onChange={saveUserCarStat.bind(
+                                            null,
+                                            userCar.id,
+                                            "handling"
+                                        )}
+                                    />
+                                </td>
+                                <td>
+                                    <StatInput
+                                        initialValue={userCar.acceleration}
+                                        onChange={saveUserCarStat.bind(
+                                            null,
+                                            userCar.id,
+                                            "acceleration"
+                                        )}
+                                    />
+                                </td>
+                                <td>
+                                    <StatInput
+                                        initialValue={userCar.launch}
+                                        onChange={saveUserCarStat.bind(
+                                            null,
+                                            userCar.id,
+                                            "launch"
+                                        )}
+                                    />
+                                </td>
+                                <td>
+                                    <StatInput
+                                        initialValue={userCar.breaking}
+                                        onChange={saveUserCarStat.bind(
+                                            null,
+                                            userCar.id,
+                                            "breaking"
+                                        )}
+                                    />
+                                </td>
+                                <td>
+                                    <StatInput
+                                        initialValue={userCar.offroad}
+                                        onChange={saveUserCarStat.bind(
+                                            null,
+                                            userCar.id,
+                                            "offroad"
+                                        )}
+                                    />
+                                </td>
                                 <td>Score</td>
                                 <td>
                                     <button
