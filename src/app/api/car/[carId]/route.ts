@@ -8,6 +8,8 @@ import {
 import { findCarById } from "@/prisma/methods/car";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export const GET = chainMiddleware(
     [hasSessionMiddleware, hasUserMiddleware()],
     async (req: IronSessionRequest, res: { params: { carId: string } }) => {

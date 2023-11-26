@@ -1,22 +1,34 @@
 "use client";
-import { createUserCar } from "@/actions/carActions";
 import CarStatsForm from "@/components/Car/CarStatsForm";
+import StatInput from "@/components/Control/StatInput";
+
 import { Car } from "@/types/Car";
 import { User, UserCar } from "@/types/User";
 import { useState } from "react";
 
-import styles from "@/components/car/carList.module.scss";
-import StatInput from "@/components/Control/StatInput";
-import { deleteUserCar, updateUserCarStat } from "@/actions/userCarActions";
+import styles from "@/components/table.module.scss";
 
 export default function MyStatsPage({
     cars,
-    userCars,
+    userCars = [],
     user,
+    onCreate,
+    onDelete,
+    onUpdate,
 }: {
     user: User;
     cars: Car[];
     userCars: UserCar<true>[];
+    onCreate: (
+        userId: number,
+        data: { rating: number; carId: number }
+    ) => Promise<UserCar<true>>;
+    onDelete: (userId: number, userCarId: number) => Promise<void>;
+    onUpdate: (
+        userCarId: number,
+        column: keyof Omit<UserCar, "id" | "userId" | "carId">,
+        value: number
+    ) => Promise<void>;
 }) {
     const [showForm, setShowForm] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -25,7 +37,7 @@ export default function MyStatsPage({
         setErrorMessage("");
 
         try {
-            await createUserCar(user.id, data);
+            await onCreate(user.id, data);
         } catch (err) {
             if (err instanceof Error) {
                 setErrorMessage(err.message);
@@ -38,11 +50,11 @@ export default function MyStatsPage({
         column: keyof Omit<UserCar, "id" | "userId" | "carId">,
         value: number
     ) => {
-        updateUserCarStat(userCarId, column, value);
+        onUpdate(userCarId, column, value);
     };
 
     const onDeleteUserCar = (userCarId: number) => {
-        deleteUserCar(user.id, userCarId);
+        onDelete(user.id, userCarId);
     };
 
     return (

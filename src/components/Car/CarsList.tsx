@@ -3,8 +3,7 @@
 import { Car } from "@/types/Car";
 import { useMemo, useState } from "react";
 
-import styles from "./carList.module.scss";
-import { deleteCar } from "@/actions/carActions";
+import styles from "@/components/table.module.scss";
 
 export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
     const sortedCars = useMemo(() => {
@@ -21,7 +20,6 @@ export function CarsList({ cars, isAdmin }: { cars: Car[]; isAdmin: boolean }) {
 
     const onClickDelete = async (id: number) => {
         setDeleting(id);
-        await deleteCar(id);
         setDeleting(false);
     };
     return (

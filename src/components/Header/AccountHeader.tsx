@@ -1,10 +1,10 @@
 "use client";
 
-import { destroySession } from "@/actions/sessionActions";
 import { User } from "@/types/User";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "@/components/Layout/layout.module.scss";
+import { destroySession } from "@/actions/sessionActions";
 
 export default function AccountHeader({ user }: { user: User }) {
     const onClickLogout = async () => {
@@ -15,7 +15,7 @@ export default function AccountHeader({ user }: { user: User }) {
 
     const bindLink = (href: string, toMatch = href, nested = false) => {
         const isActive = nested
-            ? !!pathname.match(new RegExp(`^${toMatch}`))
+            ? !!(pathname || "").match(new RegExp(`^${toMatch}`))
             : toMatch === pathname;
 
         return {

@@ -1,8 +1,11 @@
+import { Metadata } from "next";
 import { getSessionUser } from "@/actions/sessionActions";
+import { createUserCar } from "@/actions/carActions";
+import { deleteUserCar, updateUserCarStat } from "@/actions/userCarActions";
+
 import MyStatsPage from "@/pages/MyStatsPage";
 import { getCars } from "@/prisma/methods/car";
 import { getPaginatedUserCars } from "@/prisma/methods/userCar";
-import { Metadata } from "next";
 
 export function metadata(): Metadata {
     return {
@@ -21,12 +24,20 @@ export default async function StatsPage() {
     }
 
     const userCars = await getPaginatedUserCars(user.id, 0, 1000, true);
+
     return (
         <div>
             <div className="mb-8">
                 <h1 className="font-bold text-lg">My Stats</h1>
             </div>
-            <MyStatsPage user={user} cars={cars} userCars={userCars} />
+            <MyStatsPage
+                user={user}
+                cars={cars}
+                userCars={userCars}
+                onCreate={createUserCar}
+                onDelete={deleteUserCar}
+                onUpdate={updateUserCarStat}
+            />
         </div>
     );
 }
